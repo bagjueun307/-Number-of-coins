@@ -16,96 +16,126 @@
         .container {
             text-align: center;
             background: white;
-            padding: 2rem;
+            padding: 2.5rem;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
         }
         .score-wrapper {
             display: flex;
-            gap: 50px;
+            gap: 40px;
             margin-bottom: 30px;
         }
         .score-box {
             padding: 20px;
             border-radius: 15px;
+            width: 160px;
+            position: relative;
+        }
+        /* 코인/분실물 공통 클릭 영역 스타일 */
+        .click-area {
             cursor: pointer;
-            transition: transform 0.1s, background-color 0.3s;
-            width: 150px;
+            padding: 10px;
+            border-radius: 10px;
+            transition: transform 0.1s;
         }
-        /* 코인 섹션 스타일 */
-        .coin-box {
-            background-color: #fff9db;
-            border: 3px solid #fab005;
-        }
-        /* 분실물 섹션 스타일 */
-        .item-box {
-            background-color: #e7f5ff;
-            border: 3px solid #228be6;
-        }
-        .score-box:active {
+        .click-area:active {
             transform: scale(0.95);
         }
-        h2 { margin: 0; color: #495057; }
+        
+        .coin-box { background-color: #fff9db; border: 3px solid #fab005; }
+        .item-box { background-color: #e7f5ff; border: 3px solid #228be6; }
+
+        h2 { margin: 0 0 10px 0; color: #495057; font-size: 1.2rem; }
         .count {
-            font-size: 3rem;
+            font-size: 3.5rem;
             font-weight: bold;
             display: block;
-            margin-top: 10px;
+            margin: 5px 0;
         }
-        button {
-            padding: 10px 20px;
+
+        /* 빼기 버튼 스타일 */
+        .minus-btn {
+            margin-top: 15px;
+            padding: 5px 15px;
+            border: 2px solid #adb5bd;
+            background: white;
+            color: #495057;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1.1rem;
+            transition: all 0.2s;
+        }
+        .minus-btn:hover {
+            background-color: #f8f9fa;
+            border-color: #868e96;
+        }
+
+        /* 초기화 버튼 스타일 */
+        .reset-btn {
+            margin-top: 20px;
+            padding: 10px 25px;
             border: none;
             background-color: #fa5252;
             color: white;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
         }
-        button:hover { background-color: #e03131; }
+        .reset-btn:hover { background-color: #e03131; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Score Tracker</h1>
+    <h1 style="margin-bottom: 30px;">Score Tracker</h1>
     
     <div class="score-wrapper">
-        <div class="score-box coin-box" onclick="addScore('coin')">
-            <h2>💰 코인</h2>
-            <span id="coin-count" class="count">0</span>
-            <p>클릭하여 추가</p>
+        <div class="score-box coin-box">
+            <div class="click-area" onclick="changeScore('coin', 1)">
+                <h2>💰 코인</h2>
+                <span id="coin-count" class="count">0</span>
+            </div>
+            <button class="minus-btn" onclick="changeScore('coin', -1)">- 1</button>
         </div>
 
-        <div class="score-box item-box" onclick="addScore('item')">
-            <h2>📦 분실물</h2>
-            <span id="item-count" class="count">0</span>
-            <p>클릭하여 추가</p>
+        <div class="score-box item-box">
+            <div class="click-area" onclick="changeScore('item', 1)">
+                <h2>📦 분실물</h2>
+                <span id="item-count" class="count">0</span>
+            </div>
+            <button class="minus-btn" onclick="changeScore('item', -1)">- 1</button>
         </div>
     </div>
 
-    <button onclick="resetScores()">점수 초기화</button>
+    <button class="reset-btn" onclick="resetScores()">전체 초기화</button>
 </div>
 
 <script>
-    let coins = 0;
-    let items = 0;
+    let scores = {
+        coin: 0,
+        item: 0
+    };
 
-    function addScore(type) {
-        if (type === 'coin') {
-            coins++;
-            document.getElementById('coin-count').innerText = coins;
-        } else if (type === 'item') {
-            items++;
-            document.getElementById('item-count').innerText = items;
+    function changeScore(type, amount) {
+        // 점수 변경
+        scores[type] += amount;
+
+        // 0 미만으로는 내려가지 않게 설정
+        if (scores[type] < 0) {
+            scores[type] = 0;
         }
+
+        // 화면 업데이트
+        document.getElementById(type + '-count').innerText = scores[type];
     }
 
     function resetScores() {
-        if(confirm("정말로 점수를 초기화하시겠습니까?")) {
-            coins = 0;
-            items = 0;
-            document.getElementById('coin-count').innerText = coins;
-            document.getElementById('item-count').innerText = items;
+        if(confirm("모든 점수를 초기화하시겠습니까?")) {
+            scores.coin = 0;
+            scores.item = 0;
+            document.getElementById('coin-count').innerText = 0;
+            document.getElementById('item-count').innerText = 0;
         }
     }
 </script>
