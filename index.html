@@ -2,140 +2,150 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>게임 스코어 보드</title>
+    <title>Pixel Game Score Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #2c3e50;
+            --panel-bg: #ecf0f1;
+            --coin-color: #f1c40f;
+            --loot-color: #3498db;
+            --reset-color: #e74c3c;
+            --border-pixel: 4px;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            /* 배경을 어두운 벽돌 느낌으로 */
+            background-image: radial-gradient(#34495e 20%, transparent 20%), radial-gradient(#34495e 20%, transparent 20%);
+            background-position: 0 0, 10px 10px;
+            background-size: 20px 20px;
+            font-family: 'Press Start 2P', cursive;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f2f5;
+            color: #333;
         }
-        .container {
+
+        /* 메인 윈도우 창 */
+        .window {
+            background: var(--panel-bg);
+            border: var(--border-pixel) solid #000;
+            padding: 30px;
+            width: 700px;
+            box-shadow: 10px 10px 0px rgba(0,0,0,0.3);
             text-align: center;
-            background: white;
-            padding: 2.5rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-        }
-        .score-wrapper {
-            display: flex;
-            gap: 40px;
-            margin-bottom: 30px;
-        }
-        .score-box {
-            padding: 20px;
-            border-radius: 15px;
-            width: 160px;
             position: relative;
         }
-        /* 코인/분실물 공통 클릭 영역 스타일 */
-        .click-area {
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 10px;
-            transition: transform 0.1s;
+
+        .window-title {
+            font-size: 24px;
+            margin-bottom: 40px;
+            border-bottom: 4px solid #000;
+            padding-bottom: 20px;
         }
-        .click-area:active {
-            transform: scale(0.95);
+
+        .score-container {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 40px;
         }
+
+        .card {
+            background: #ddd;
+            border: var(--border-pixel) solid #000;
+            padding: 20px;
+            width: 250px;
+        }
+
+        /* 이미지 크기 키우기 */
+        .icon {
+            width: 100px;
+            height: 100px;
+            image-rendering: pixelated; /* 도트 선명하게 */
+            margin-bottom: 15px;
+        }
+
+        .label { font-size: 16px; margin: 10px 0; }
+        .count { font-size: 40px; margin: 15px 0; display: block; }
+
+        /* 버튼 디자인 */
+        .btn-group { display: flex; gap: 10px; justify-content: center; }
         
-        .coin-box { background-color: #fff9db; border: 3px solid #fab005; }
-        .item-box { background-color: #e7f5ff; border: 3px solid #228be6; }
-
-        h2 { margin: 0 0 10px 0; color: #495057; font-size: 1.2rem; }
-        .count {
-            font-size: 3.5rem;
-            font-weight: bold;
-            display: block;
-            margin: 5px 0;
-        }
-
-        /* 빼기 버튼 스타일 */
-        .minus-btn {
-            margin-top: 15px;
-            padding: 5px 15px;
-            border: 2px solid #adb5bd;
-            background: white;
-            color: #495057;
-            border-radius: 8px;
+        button {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 10px;
+            padding: 10px;
             cursor: pointer;
-            font-weight: bold;
-            font-size: 1.1rem;
-            transition: all 0.2s;
-        }
-        .minus-btn:hover {
-            background-color: #f8f9fa;
-            border-color: #868e96;
+            border: 3px solid #000;
+            outline: none;
+            transition: 0.1s;
         }
 
-        /* 초기화 버튼 스타일 */
+        button:active { transform: translateY(4px); box-shadow: none; }
+
+        .add-btn { background: #fff; box-shadow: 0 4px 0 #999; }
+        .sub-btn { background: #e74c3c; color: white; box-shadow: 0 4px 0 #921; }
+
         .reset-btn {
             margin-top: 20px;
-            padding: 10px 25px;
-            border: none;
-            background-color: #fa5252;
+            background: #e74c3c;
             color: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
+            padding: 15px 30px;
+            font-size: 14px;
+            box-shadow: 0 6px 0 #921;
         }
-        .reset-btn:hover { background-color: #e03131; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1 style="margin-bottom: 30px;">Score Tracker</h1>
-    
-    <div class="score-wrapper">
-        <div class="score-box coin-box">
-            <div class="click-area" onclick="changeScore('coin', 1)">
-                <h2>💰 코인</h2>
-                <span id="coin-count" class="count">0</span>
+<div class="window">
+    <div class="window-title">SCORE TRACKER</div>
+
+    <div class="score-container">
+        <div class="card">
+            <img src="https://img.icons8.com/pixel-bold/100/null/coin-scaling-gradient.png" class="icon" alt="coin">
+            <div class="label">COIN</div>
+            <span id="coin-count" class="count">0</span>
+            <div class="btn-group">
+                <button class="add-btn" onclick="update('coin', 1)">ADD</button>
+                <button class="sub-btn" onclick="update('coin', -1)">SUB</button>
             </div>
-            <button class="minus-btn" onclick="changeScore('coin', -1)">- 1</button>
         </div>
 
-        <div class="score-box item-box">
-            <div class="click-area" onclick="changeScore('item', 1)">
-                <h2>📦 분실물</h2>
-                <span id="item-count" class="count">0</span>
+        <div class="card">
+            <img src="https://img.icons8.com/pixel-bold/100/null/treasure-chest.png" class="icon" alt="loot">
+            <div class="label">LOOT</div>
+            <span id="item-count" class="count">0</span>
+            <div class="btn-group">
+                <button class="add-btn" onclick="update('item', 1)">ADD</button>
+                <button class="sub-btn" onclick="update('item', -1)">SUB</button>
             </div>
-            <button class="minus-btn" onclick="changeScore('item', -1)">- 1</button>
         </div>
     </div>
 
-    <button class="reset-btn" onclick="resetScores()">전체 초기화</button>
+    <button class="reset-btn" onclick="resetAll()">RESET ALL</button>
 </div>
 
 <script>
-    let scores = {
-        coin: 0,
-        item: 0
-    };
+    let scores = { coin: 0, item: 0 };
 
-    function changeScore(type, amount) {
-        // 점수 변경
-        scores[type] += amount;
-
-        // 0 미만으로는 내려가지 않게 설정
-        if (scores[type] < 0) {
-            scores[type] = 0;
-        }
-
-        // 화면 업데이트
-        document.getElementById(type + '-count').innerText = scores[type];
+    function update(type, val) {
+        scores[type] += val;
+        if(scores[type] < 0) scores[type] = 0;
+        
+        const id = type === 'coin' ? 'coin-count' : 'item-count';
+        document.getElementById(id).innerText = scores[type];
     }
 
-    function resetScores() {
-        if(confirm("모든 점수를 초기화하시겠습니까?")) {
+    function resetAll() {
+        if(confirm("정말 초기화하시겠습니까?")) {
             scores.coin = 0;
             scores.item = 0;
-            document.getElementById('coin-count').innerText = 0;
-            document.getElementById('item-count').innerText = 0;
+            document.getElementById('coin-count').innerText = "0";
+            document.getElementById('item-count').innerText = "0";
         }
     }
 </script>
