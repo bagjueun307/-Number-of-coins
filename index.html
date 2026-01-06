@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>게임 스코어 보드</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            text-align: center;
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .score-wrapper {
+            display: flex;
+            gap: 50px;
+            margin-bottom: 30px;
+        }
+        .score-box {
+            padding: 20px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: transform 0.1s, background-color 0.3s;
+            width: 150px;
+        }
+        /* 코인 섹션 스타일 */
+        .coin-box {
+            background-color: #fff9db;
+            border: 3px solid #fab005;
+        }
+        /* 분실물 섹션 스타일 */
+        .item-box {
+            background-color: #e7f5ff;
+            border: 3px solid #228be6;
+        }
+        .score-box:active {
+            transform: scale(0.95);
+        }
+        h2 { margin: 0; color: #495057; }
+        .count {
+            font-size: 3rem;
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #fa5252;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover { background-color: #e03131; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Score Tracker</h1>
+    
+    <div class="score-wrapper">
+        <div class="score-box coin-box" onclick="addScore('coin')">
+            <h2>💰 코인</h2>
+            <span id="coin-count" class="count">0</span>
+            <p>클릭하여 추가</p>
+        </div>
+
+        <div class="score-box item-box" onclick="addScore('item')">
+            <h2>📦 분실물</h2>
+            <span id="item-count" class="count">0</span>
+            <p>클릭하여 추가</p>
+        </div>
+    </div>
+
+    <button onclick="resetScores()">점수 초기화</button>
+</div>
+
+<script>
+    let coins = 0;
+    let items = 0;
+
+    function addScore(type) {
+        if (type === 'coin') {
+            coins++;
+            document.getElementById('coin-count').innerText = coins;
+        } else if (type === 'item') {
+            items++;
+            document.getElementById('item-count').innerText = items;
+        }
+    }
+
+    function resetScores() {
+        if(confirm("정말로 점수를 초기화하시겠습니까?")) {
+            coins = 0;
+            items = 0;
+            document.getElementById('coin-count').innerText = coins;
+            document.getElementById('item-count').innerText = items;
+        }
+    }
+</script>
+
+</body>
+</html>
